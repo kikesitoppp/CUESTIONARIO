@@ -66,6 +66,7 @@ function showQuestion() {
     <input type="text" id="answer" placeholder="Respuesta">
     <button id="submit-button">Enviar</button>
   `;
+  questionsContainer.innerHTML = '';
   questionsContainer.appendChild(questionElement);
 
   const submitButton = document.getElementById('submit-button');
@@ -76,4 +77,56 @@ function showQuestion() {
       showCorrectMessage();
     } else {
       incorrectAnswers++;
-      showErrorMessage(question
+      showErrorMessage(question.errorMessage);
+    }
+    currentQuestion++;
+    if (currentQuestion < questions.length) {
+      showQuestion();
+    } else {
+      showResults();
+    }
+  });
+}
+
+function showCorrectMessage() {
+  const messageElement = document.createElement('div');
+  messageElement.innerHTML = `
+    <p>EXCELENTE MI AMOR SIGUE ASÍ</p>
+    <span class="heart">❤️</span>
+  `;
+  questionsContainer.appendChild(messageElement);
+  setTimeout(() => {
+    messageElement.remove();
+  }, 2000);
+}
+
+function showErrorMessage(errorMessage) {
+  const messageElement = document.createElement('div');
+  messageElement.innerHTML = `
+    <p>${errorMessage}</p>
+    <span class="sad-face">☹️</span>
+  `;
+  questionsContainer.appendChild(messageElement);
+  setTimeout(() => {
+    messageElement.remove();
+  }, 2000);
+}
+
+function showResults() {
+  questionsContainer.style.display = 'none';
+  resultsContainer.style.display = 'block';
+  const resultsElement = document.createElement('div');
+  resultsElement.innerHTML = `
+    <p>Resultados:</p>
+    <p>Correctas: ${correctAnswers}</p>
+    <p>Incorrectas: ${incorrectAnswers}</p>
+    ${correctAnswers > incorrectAnswers ? `
+      <p>Me quieres, pero quiereme más 😊</p>
+    ` : correctAnswers === questions.length ? `
+      <p>Me quiero mucho, pero yo te quiero más 😊</p>
+    ` : `
+      <p>No me quieres 😔</p>
+    `}
+  `;
+  resultsContainer.appendChild(resultsElement);
+}
